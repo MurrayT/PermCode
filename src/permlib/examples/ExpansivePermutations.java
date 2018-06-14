@@ -11,7 +11,17 @@ import java.util.stream.Collectors;
 
 public class ExpansivePermutations {
 
-    static Set<Permutation> onePointExtensions(Permutation p, PermutationClass c) {
+    public static Iterable<Pair<Permutation, Integer>> onePointExtensions(Permutation p) {
+        HashSet<Pair<Permutation,Integer>> result = new HashSet<>();
+        for (int i = 0; i <= p.length(); i++) {
+            for (int j = 0; j <= p.length(); j++) {
+                result.add(Pair.of(PermUtilities.insert(p, i, j), j+1));
+            }
+        }
+        return result;
+    }
+
+    static Set<Permutation> covers(Permutation p, PermutationClass c) {
         Set<Permutation> result = new HashSet<>();
         for (Permutation q : PermUtilities.onePointExtensions(p)) {
             if (c.containsPermutation(q)) result.add(q);
@@ -29,44 +39,57 @@ public class ExpansivePermutations {
     }
 
     public static void main(String[] args) {
-
-        int high = 10;
+        long t0 = System.currentTimeMillis();
+        int high = 14;
 
         Permutation pattern = new Permutation("123");
-        PermutationClass c = new PermutationClass("321");
+        String[] basisArray = {"321"};
+        Set<Permutation> basis = Arrays.stream(basisArray).map(Permutation::new).collect(Collectors.toCollection(HashSet::new));
+        PermutationClass o = new PermutationClass(basis);
 
         Set<Permutation> nonexpansive = new HashSet<>();
-        Set<Permutation> expansive = new HashSet<>();
         Map<Permutation, Integer> occurrenceMap = new HashMap<>();
 
 
-        for (Permutation q: new Permutations(c,0,high)){
-            int os;
-            if (!(occurrenceMap.containsKey(q))){
-                os = occurrenceCount(q, pattern);
-                occurrenceMap.put(q, os);
-            } else {
-                os = occurrenceMap.get(q);
-            }
-            List<Boolean> expands = new ArrayList<>();
-            for (Permutation ext : onePointExtensions(q,c)){
-                int extOccs = occurrenceCount(ext, pattern);
-                if (!(occurrenceMap.containsKey(q))){
-                    occurrenceMap.put(ext, extOccs);
+        for (int permLength = 1; permLength <= high; permLength++) {
+            PermutationClass c = new PermutationClass(basis);
+            Set<Permutation> newBasis = new HashSet<>();
+            for (Permutation q : new Permutations(c, permLength)) {
+                int os;
+                if (!(occurrenceMap.containsKey(q))) {
+                    os = occurrenceCount(q, pattern);
+                    occurrenceMap.put(q, os);
+                } else {
+                    os = occurrenceMap.get(q);
                 }
-                expands.add(extOccs > os);
+                boolean expands = true;
+                for (Permutation ext : covers(q, o)) {
+                    int extOccs;
+                    if (!(occurrenceMap.containsKey(ext))) {
+                        extOccs = occurrenceCount(ext, pattern);
+                        occurrenceMap.put(ext, extOccs);
+                    } else {
+                        extOccs = occurrenceMap.get(ext);
+                    }
+                    expands = (extOccs > os);
+                    if(!expands) break;
+                }
+                if (!expands)
+                    nonexpansive.add(q);
+                else
+                    newBasis.add(q);
             }
-            if (expands.contains(false))
-                nonexpansive.add(q);
-            else
-                expansive.add(q);
+            basis.addAll(newBasis);
         }
+        long t1 = System.currentTimeMillis();
+        System.out.println("Elapsed Time: " + Long.toString(t1-t0));
         List<Integer> lengths = nonexpansive.stream().sorted().map(Permutation::length).collect(Collectors.toList());
         lengths.stream().distinct().forEach(l-> System.out.print(Integer.toString(Collections.frequency(lengths,l)) + ", "));
         System.out.println();
-        nonexpansive.stream().sorted().forEach(System.out::println);
+//        nonexpansive.stream().sorted().forEach(System.out::println);
         System.out.println("-----");
-        expansive.stream().sorted().forEach(System.out::println);
+        basis.stream().sorted().forEach(System.out::println);
+
     }
 
 }
