@@ -11,12 +11,20 @@ import java.util.stream.Collectors;
 
 public class ExpansivePermutations {
 
-    public static Iterable<Pair<Permutation, Integer>> onePointExtensions(Permutation p) {
+    public static Iterable<Pair<Permutation, Integer>> indexedOnePointExtensions(Permutation p) {
         HashSet<Pair<Permutation,Integer>> result = new HashSet<>();
         for (int i = 0; i <= p.length(); i++) {
             for (int j = 0; j <= p.length(); j++) {
-                result.add(Pair.of(PermUtilities.insert(p, i, j), j+1));
+                result.add(Pair.of(PermUtilities.insert(p, i, j), i));
             }
+        }
+        return result;
+    }
+
+    static Set<Pair<Permutation, Integer>> indexedCovers(Permutation p, PermutationClass c) {
+        Set<Pair<Permutation, Integer>> result = new HashSet<>();
+        for (Pair<Permutation, Integer> q : indexedOnePointExtensions(p)) {
+            if (c.containsPermutation(q.getFirst())) result.add(q);
         }
         return result;
     }
