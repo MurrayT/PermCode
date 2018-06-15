@@ -71,65 +71,11 @@ public class Combinations implements Iterable<int[]> {
      */
     @Override
     public Iterator<int[]> iterator() {
-        return new Iterator<int[]>() {
-
-            int[] c = null;
-
-            /**
-             * Returns true if there is a next combination in the set.
-             */
-            @Override
-            public boolean hasNext() {
-                return k <= n && (c == null || (k > 0 && c[0] < n - k));
-            }
-
-            /**
-             * Returns the next combination in the set.
-             */
-            @Override
-            public int[] next() {
-                if (c == null) {
-                    createFirstCombination();
-                } else {
-                    update();
-                }
-                return c;
-            }
-
-            /**
-             * An operation to remove a combination from the set. This is not
-             * supported in this context.
-             */
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException("Remove is not supported.");
-            }
-
-            private void createFirstCombination() {
-                c = new int[k];
-                for (int i = 0; i < k; i++) {
-                    c[i] = i;
-                }
-            }
-
-            private void update() {
-                int i = 1;
-                while (i <= k && c[k - i] == n - i) {
-                    i++;
-                }
-                if (i > k) {
-                    return;
-                }
-                c[k - i]++;
-                for (int j = k - i + 1; j < k; j++) {
-                    c[j] = c[j - 1] + 1;
-                }
-            }
-        }; // End of anonymous class
+        return new CombinationsIterator(n,k);
     }
 
     public static void main(String[] args) {
-        Combinations cs = new Combinations(6, 0);
+        Combinations cs = new Combinations(6, 3);
         for (int[] c : cs) {
             System.out.println(Arrays.toString(c));
         }
