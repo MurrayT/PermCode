@@ -106,9 +106,11 @@ public class AnimatedPermFrame extends JFrame {
         displayPanel = new DisplayPanel();
         optionsPanel = new JPanel();
         stepButton = new JButton();
+        backButton = new JButton();
         startButton = new JButton();
         stopButton = new JButton();
         resetButton = new JButton();
+        permSlider = new JSlider();
         speedSlider = new JSlider();
         slowLabel = new JLabel();
         fastLabel = new JLabel();
@@ -155,6 +157,13 @@ public class AnimatedPermFrame extends JFrame {
         stepButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 stepButtonActionPerformed(evt);
+            }
+        });
+
+        backButton.setText("Back");
+        backButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backButtonActionPerformed(evt);
             }
         });
 
@@ -239,6 +248,8 @@ public class AnimatedPermFrame extends JFrame {
                             .addGroup(GroupLayout.Alignment.TRAILING, optionsPanelLayout.createSequentialGroup()
                                 .addComponent(stepButton)
                                 .addGap(18, 18, 18)
+                                .addComponent(backButton)
+                                .addGap(18, 18, 18)
                                 .addComponent(startButton)
                                 .addGap(18, 18, 18)
                                 .addComponent(stopButton)
@@ -267,7 +278,8 @@ public class AnimatedPermFrame extends JFrame {
                             .addComponent(resetButton)
                             .addComponent(stopButton)
                             .addComponent(startButton)
-                            .addComponent(stepButton))))
+                            .addComponent(stepButton)
+                            .addComponent(backButton))))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(frameLabel)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -401,6 +413,16 @@ public class AnimatedPermFrame extends JFrame {
     }//GEN-LAST:event_stepButtonActionPerformed
 
     /**
+     * Steps through the animation backwards one frame.
+     *
+     * @param evt event of the stop button being pressed
+     */
+    private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stepButtonActionPerformed
+        timer.stop();
+        back();
+    }
+
+    /**
      * If the pop-up menu is triggered then stop the animation and show the menu
      * at the spot clicked.
      *
@@ -466,8 +488,10 @@ public class AnimatedPermFrame extends JFrame {
     private JLabel slowLabel;
     private JButton sortButton;
     private JSlider speedSlider;
+    private JSlider permSlider;
     private JButton startButton;
     private JButton stepButton;
+    private JButton backButton;
     private JButton stopButton;
     private JLabel totalFramesLabel;
     // End of variables declaration//GEN-END:variables
@@ -621,6 +645,14 @@ public class AnimatedPermFrame extends JFrame {
      */
     public void step() {
         permIndex++;
+        refresh();
+    }
+
+    /**
+     * Move to previous frame.
+     */
+    public void back() {
+        permIndex--;
         refresh();
     }
 

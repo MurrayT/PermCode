@@ -30,6 +30,21 @@ public class ExpansivePermutationsV2 {
         return result;
     }
 
+    static boolean occurrenceWithIndex(Pair<Permutation, Integer> pair, Set<Permutation> patterns){
+        Permutation text = pair.getFirst();
+        double halfLength = text.length()/2.;
+        Integer index = pair.getSecond();
+        List<Integer> lengths = patterns.stream().map(Permutation::length).distinct().sorted((o1, o2) -> Double.compare(Math.abs(o2-halfLength), Math.abs(o1-halfLength))).collect(Collectors.toList());
+        for (Integer patternLength: lengths){
+            for (int[] comb : new CombinationsIncluding(text.length(), patternLength, index)){
+                if (patterns.contains(text.patternAt(comb))){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     static boolean occurrenceWithIndex(Pair<Permutation, Integer> pair, Permutation pattern){
         Permutation text = pair.getFirst();
         Integer index = pair.getSecond();
@@ -44,8 +59,10 @@ public class ExpansivePermutationsV2 {
         long t0 = System.currentTimeMillis();
         int high = 14;
 
-        Permutation pattern = new Permutation("123");
-        String[] basisArray = {"321"};
+
+        String[] patternArray = {"321", "1234"};
+        Set<Permutation> patterns = Arrays.stream(patternArray).map(Permutation::new).collect(Collectors.toCollection(HashSet::new));
+        String[] basisArray = {"2413","3142"};
         Set<Permutation> basis = Arrays.stream(basisArray).map(Permutation::new).collect(Collectors.toCollection(HashSet::new));
         PermutationClass o = new PermutationClass(basis);
 
@@ -58,7 +75,7 @@ public class ExpansivePermutationsV2 {
             for (Permutation q : new Permutations(c, permLength)) {
                 boolean expands = true;
                 for (Pair<Permutation, Integer> ext : indexedCovers(q, o)) {
-                    expands = occurrenceWithIndex(ext, pattern);
+                    expands = occurrenceWithIndex(ext, patterns);
                     if(!expands) break;
                 }
                 if (!expands)
