@@ -60,9 +60,9 @@ public class ExpansivePermutationsV2 {
         int high = 14;
 
 
-        String[] patternArray = {"321", "1234"};
+        String[] patternArray = { "132", "4312", "3241"};
         Set<Permutation> patterns = Arrays.stream(patternArray).map(Permutation::new).collect(Collectors.toCollection(HashSet::new));
-        String[] basisArray = {"2413","3142"};
+        String[] basisArray = {"213"};
         Set<Permutation> basis = Arrays.stream(basisArray).map(Permutation::new).collect(Collectors.toCollection(HashSet::new));
         PermutationClass o = new PermutationClass(basis);
 
@@ -70,6 +70,7 @@ public class ExpansivePermutationsV2 {
 
 
         for (int permLength = 1; permLength <= high; permLength++) {
+            System.err.print(permLength+", ");
             PermutationClass c = new PermutationClass(basis);
             Set<Permutation> newBasis = new HashSet<>();
             for (Permutation q : new Permutations(c, permLength)) {
@@ -85,12 +86,16 @@ public class ExpansivePermutationsV2 {
             }
             basis.addAll(newBasis);
         }
+        System.err.println();
         long t1 = System.currentTimeMillis();
+        System.out.println("==========");
+        System.out.println("(" + String.join(",", patternArray) + ")-expansive in Av(" + String.join(",",basisArray) +")");
         System.out.println("Elapsed Time: " + Long.toString(t1-t0));
         List<Integer> lengths = nonexpansive.stream().sorted().map(Permutation::length).collect(Collectors.toList());
         lengths.stream().distinct().forEach(l-> System.out.print(Integer.toString(Collections.frequency(lengths,l)) + ", "));
         System.out.println();
         System.out.println("-----");
+        System.out.println(basis.size() + " basis elements");
         basis.stream().sorted().forEach(System.out::println);
 
     }
