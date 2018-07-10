@@ -104,10 +104,11 @@ public class ExpansivePermutations {
     }
 
     public static void main(String[] args) {
+        // TODO: build table for 1+alpha+1, 1+alpha/alpha+1 etc.
         long t0 = System.currentTimeMillis();
         int high = 14;
 
-        Pair<Set<Permutation>, Set<Permutation>> example = generateExample(2, 3,4, 3, 4, 5);
+        Pair<Set<Permutation>, Set<Permutation>> example = generateExample(4, 3,6, 3, 4, 5);
 
 //        Permutation pattern = new Permutation("123");
         Set<Permutation> patterns = example.getSecond();
@@ -125,7 +126,7 @@ public class ExpansivePermutations {
 
 
         for (int permLength = 1; permLength <= high; permLength++) {
-            System.err.println("Permutations of Length" +permLength);
+            System.err.println("Permutations of Length " +permLength);
             PermutationClass c = new PermutationClass(basis);
             Set<Permutation> newBasis = new HashSet<>();
             for (Permutation q : new Permutations(c, permLength)) {

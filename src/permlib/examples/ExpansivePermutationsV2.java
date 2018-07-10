@@ -60,7 +60,7 @@ public class ExpansivePermutationsV2 {
         int high = 14;
 
 
-        String[] patternArray = { "132", "4312", "3241"};
+        String[] patternArray = { "132", "4312", "2341"};
         Set<Permutation> patterns = Arrays.stream(patternArray).map(Permutation::new).collect(Collectors.toCollection(HashSet::new));
         String[] basisArray = {"213"};
         Set<Permutation> basis = Arrays.stream(basisArray).map(Permutation::new).collect(Collectors.toCollection(HashSet::new));
@@ -81,8 +81,9 @@ public class ExpansivePermutationsV2 {
                 }
                 if (!expands)
                     nonexpansive.add(q);
-                else
-                    newBasis.add(q);
+                else{
+                    System.err.println(q);
+                    newBasis.add(q);}
             }
             basis.addAll(newBasis);
         }
