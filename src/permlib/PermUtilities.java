@@ -185,6 +185,8 @@ public class PermUtilities {
     public static Permutation insert(Permutation p, int index, int value) {
         value = (value < 0 ? 0 : value);
         value = (value > p.elements.length ? p.elements.length : value);
+        index = (index < 0 ? 0 : index);
+        index = (index > p.elements.length ? p.elements.length : index);
         Permutation result = new Permutation(p.elements.length + 1);
         for (int i = 0; i < index; i++) {
             result.elements[i] = p.elements[i] + (p.elements[i] >= value ? 1 : 0);

@@ -107,70 +107,84 @@ public class ExpansivePermutations {
         // TODO: build table for 1+alpha+1, 1+alpha/alpha+1 etc.
         long t0 = System.currentTimeMillis();
         int high = 14;
+        Set<Permutation> ogbasis;
+        Set<Permutation> basis;
+        Set<Permutation> patterns;
 
-        Pair<Set<Permutation>, Set<Permutation>> example = generateExample(4, 3,6, 3, 4, 5);
+//        Pair<Set<Permutation>, Set<Permutation>> example = generateExample(4, 3,6, 3, 4, 5);
+//        ogbasis = example.getFirst();
 
-//        Permutation pattern = new Permutation("123");
-        Set<Permutation> patterns = example.getSecond();
-//        String[] basisArray = {"321"};
+//        String[] basisArray = {"231"};
 //        Set<Permutation> basis = Arrays.stream(basisArray).map(Permutation::new).collect(Collectors.toCollection(HashSet::new));
-        Set<Permutation> ogbasis = example.getFirst();
-        Set<Permutation> basis = new HashSet<>(ogbasis);
 
-        PermutationClass o = new PermutationClass(basis);
+        ogbasis = Set.of(new Permutation("231"), new Permutation("312"));
+        PermutationClass o = new PermutationClass(ogbasis);
+
+//         patterns = example.getSecond();
+//        Permutation pattern = new Permutation("123");
+
+
+        for (int pattlen = 0; pattlen < 7; ++pattlen) {
+            for (Permutation pattern : o.getPerms(pattlen)) {
+                patterns = new HashSet<>(List.of(pattern.insert(pattlen, pattlen).insert(0, 0)));
+
+                basis = new HashSet<>(ogbasis);
+
+
 //        System.out.println(patterns);
 //        System.out.println("(" + String.join(",", patterns) + ")-expansive in Av(" + String.join(",",basisArray) +")");
 
-        Set<Permutation> nonexpansive = new HashSet<>();
-        Map<Permutation, Integer> occurrenceMap = new HashMap<>();
+                Set<Permutation> nonexpansive = new HashSet<>();
+                Map<Permutation, Integer> occurrenceMap = new HashMap<>();
 
 
-        for (int permLength = 1; permLength <= high; permLength++) {
-            System.err.println("Permutations of Length " +permLength);
-            PermutationClass c = new PermutationClass(basis);
-            Set<Permutation> newBasis = new HashSet<>();
-            for (Permutation q : new Permutations(c, permLength)) {
-                int os;
-                if (!(occurrenceMap.containsKey(q))) {
-                    os = occurrenceCount(q, patterns);
-                    occurrenceMap.put(q, os);
-                } else {
-                    os = occurrenceMap.get(q);
-                }
-                boolean expands = true;
-                for (Permutation ext : covers(q, o)) {
-                    int extOccs;
-                    if (!(occurrenceMap.containsKey(ext))) {
-                        extOccs = occurrenceCount(ext, patterns);
-                        occurrenceMap.put(ext, extOccs);
-                    } else {
-                        extOccs = occurrenceMap.get(ext);
+                for (int permLength = 1; permLength <= high; permLength++) {
+                    System.err.println("Permutations of Length " + permLength);
+                    PermutationClass c = new PermutationClass(basis);
+                    Set<Permutation> newBasis = new HashSet<>();
+                    for (Permutation q : new Permutations(c, permLength)) {
+                        int os;
+                        if (!(occurrenceMap.containsKey(q))) {
+                            os = occurrenceCount(q, patterns);
+                            occurrenceMap.put(q, os);
+                        } else {
+                            os = occurrenceMap.get(q);
+                        }
+                        boolean expands = true;
+                        for (Permutation ext : covers(q, o)) {
+                            int extOccs;
+                            if (!(occurrenceMap.containsKey(ext))) {
+                                extOccs = occurrenceCount(ext, patterns);
+                                occurrenceMap.put(ext, extOccs);
+                            } else {
+                                extOccs = occurrenceMap.get(ext);
+                            }
+                            expands = (extOccs > os);
+                            if (!expands) break;
+                        }
+                        if (!expands)
+                            nonexpansive.add(q);
+                        else {
+                            System.err.println(q);
+                            newBasis.add(q);
+                        }
+
                     }
-                    expands = (extOccs > os);
-                    if (!expands) break;
+                    basis.addAll(newBasis);
                 }
-                if (!expands)
-                    nonexpansive.add(q);
-                else {
-                    System.err.println(q);
-                    newBasis.add(q);
-                }
-
+                System.err.println();
+                long t1 = System.currentTimeMillis();
+                System.out.println("==========");
+                System.out.println("π = " + pattern);
+                System.out.println(patterns + "-expansive in Av" + ogbasis);
+                System.out.println("Elapsed Time: " + Long.toString(t1 - t0));
+                List<Integer> lengths = nonexpansive.stream().sorted().map(Permutation::length).collect(Collectors.toList());
+                lengths.stream().distinct().forEach(l -> System.out.print(Integer.toString(Collections.frequency(lengths, l)) + ", "));
+                System.out.println();
+                System.out.println("-----");
+                System.out.println(basis.size() + " basis elements");
+                basis.stream().sorted().forEach(System.out::println);
             }
-            basis.addAll(newBasis);
         }
-        System.err.println();
-        long t1 = System.currentTimeMillis();
-        System.out.println("==========");
-        System.out.println(patterns + "-expansive in Av" + ogbasis);
-        System.out.println("Elapsed Time: " + Long.toString(t1-t0));
-        List<Integer> lengths = nonexpansive.stream().sorted().map(Permutation::length).collect(Collectors.toList());
-        lengths.stream().distinct().forEach(l-> System.out.print(Integer.toString(Collections.frequency(lengths,l)) + ", "));
-        System.out.println();
-        System.out.println("-----");
-        System.out.println(basis.size() + " basis elements");
-        basis.stream().sorted().forEach(System.out::println);
-
     }
-
 }
