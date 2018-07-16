@@ -15,12 +15,13 @@ def get_chunk(file_handle):
 
 def get_patt(chunk):
     pattline = chunk.popleft()
-    pattstr = pattline.split("=")[-1]
+    pattstr = pattline.split("=")[-1].strip()
     if pattstr == '':
         pattstr = 'ε'
     return pattstr
 
 def get_basis(chunk, *args):
+    # print(args)
     basis = []
     bit = chunk.pop()
     while not re.match(r'\d+ basis elements', bit):
@@ -43,24 +44,31 @@ def has_chunk(file):
 
 
 parser = argparse.ArgumentParser(description="Take multiple files and parse them into a single table")
+
+parser.add_argument('-s', '--separator', help="Separator for the table fields", default="|")
+parser.add_argument('-p', '--patternseparator', help="Separator for the patterns fields", default=",")
+parser.add_argument('-e', '--exclude', help="patterns to exclude from the output", nargs='+')
 parser.add_argument('files', metavar='F', type=open, nargs='+')
 
-args = parser.parse_args()
 
+args = parser.parse_args()
+# print (args.exclude)
 while any(map(has_chunk, args.files)):
     current_chunk_id = None
     for file in args.files:
         chunk = get_chunk(file)
+        if not chunk:
+            continue
         pattstr = get_patt(chunk)
         if current_chunk_id:
             if not current_chunk_id == pattstr:
-                print("chunk mismatch got {}, expected current_chunk_id {}".format(pattstr, current_chunk_id))
+                print("chunk mismatch got {}, expected current_chunk_id {}".format(pattstr, current_chunk_id), file=sys.stderr)
                 continue
         else:
             current_chunk_id = pattstr
-            print(pattstr, end=';')
-        basis = get_basis(chunk)
-        print(",".join(basis), end=';')
+            print("|"+pattstr, end=args.separator)
+        basis = get_basis(chunk, *args.exclude)
+        print(args.patternseparator.join(basis), end=args.separator)
 
     else:
         print()

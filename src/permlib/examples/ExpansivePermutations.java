@@ -126,7 +126,7 @@ public class ExpansivePermutations {
 
         for (int pattlen = 0; pattlen < 7; ++pattlen) {
             for (Permutation pattern : o.getPerms(pattlen)) {
-                patterns = new HashSet<>(List.of(pattern.insert(pattlen, pattlen).insert(0, 0)));
+                patterns = new HashSet<>(List.of(pattern.insert(pattlen, pattlen),pattern.insert(0, 0)));
 
                 basis = new HashSet<>(ogbasis);
 
