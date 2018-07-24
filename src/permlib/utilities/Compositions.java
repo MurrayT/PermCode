@@ -22,7 +22,7 @@ public class Compositions implements Iterable<int[]> {
      */
     @Override
     public Iterator<int[]> iterator() {
-        return new CompositionsIteratorByBitString(n);
+        return new CompositionsIteratorBySwaps(n);
     }
 
     public static void main(String[] args) {

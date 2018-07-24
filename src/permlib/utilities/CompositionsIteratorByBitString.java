@@ -1,8 +1,6 @@
 package permlib.utilities;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 public class CompositionsIteratorByBitString implements Iterator<int[]> {
 
@@ -49,12 +47,21 @@ public class CompositionsIteratorByBitString implements Iterator<int[]> {
     }
 
     public static void main(String[] args) {
-        long startTime = System.nanoTime();
-        Iterator<int[]> c = new CompositionsIteratorByBitString(9);
-        while(c.hasNext()){
-            System.out.println(Arrays.toString(c.next()));
+        for (int l = 1; l<21; l++) {
+            List<Long> times = new ArrayList<>();
+            long startTime, endTime;
+            for (int e = 0; e < 40; e++) {
+                startTime = System.nanoTime();
+                Iterator<int[]> c = new CompositionsIteratorByBitString(l);
+                while (c.hasNext()) {
+                    c.next();
+                }
+                endTime = System.nanoTime();
+                times.add(endTime - startTime);
+            }
+            long ttime = times.stream().reduce(Math::addExact).orElse(0L);
+            long avgtime = ttime / times.size();
+            System.out.println(avgtime);
         }
-        long endTime = System.nanoTime();
-        System.out.println("Execution Time: " + (endTime-startTime));
     }
 }
