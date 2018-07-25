@@ -2,12 +2,12 @@ package permlib.utilities;
 
 import java.util.*;
 
-public class CompositionsIteratorBySwaps implements Iterator<int[]> {
+public class CompositionsIterator implements Iterator<StrongComposition> {
 
     private final int n;
     private int[] comp;
 
-    public CompositionsIteratorBySwaps(int n) {
+    public CompositionsIterator(int n) {
         this.n = n;
         comp = new int[n];
     }
@@ -31,10 +31,10 @@ public class CompositionsIteratorBySwaps implements Iterator<int[]> {
      * @throws NoSuchElementException if the iteration has no more elements
      */
     @Override
-    public int[] next() {
+    public StrongComposition next() {
         //find the index of the first zero value in comp
         if (n==0){
-            return new int[0];
+            return new StrongComposition();
         }
         int i,diff=n+1;
         for (i=0; i<comp.length && comp[i] != 0;i++);
@@ -52,25 +52,33 @@ public class CompositionsIteratorBySwaps implements Iterator<int[]> {
                 }
             }
         }
-        return Arrays.copyOfRange(comp, 0, i+diff-1);
+        return new StrongComposition(Arrays.copyOfRange(comp, 0, i+diff-1));
     }
 
     public static void main(String[] args) {
-        for (int l = 1; l<21; l++) {
-            List<Long> times = new ArrayList<>();
-            long startTime, endTime;
-            for (int e = 0; e < 40; e++) {
-                startTime = System.nanoTime();
-                Iterator<int[]> c = new CompositionsIteratorBySwaps(l);
-                while (c.hasNext()) {
-                    c.next();
-                }
-                endTime = System.nanoTime();
-                times.add(endTime - startTime);
-            }
-            long ttime = times.stream().reduce(Math::addExact).orElse(0L);
-            long avgtime = ttime / times.size();
-            System.out.println(avgtime);
+//        for (int l = 1; l<21; l++) {
+//            List<Long> times = new ArrayList<>();
+//            long startTime, endTime;
+//            for (int e = 0; e < 40; e++) {
+//                startTime = System.nanoTime();
+//                Iterator<int[]> c = new CompositionsIterator(l);
+//                while (c.hasNext()) {
+//                    c.next();
+//                }
+//                endTime = System.nanoTime();
+//                times.add(endTime - startTime);
+//            }
+//            long ttime = times.stream().reduce(Math::addExact).orElse(0L);
+//            long avgtime = ttime / times.size();
+//            System.out.println(avgtime);
+//        }
+        long startTime = System.nanoTime();
+        Iterator<StrongComposition> c = new CompositionsIterator(8);
+        while(c.hasNext()){
+            System.out.println(c.next());
         }
+        long endTime = System.nanoTime();
+        System.out.println("Execution Time: " + (endTime-startTime));
     }
+
 }

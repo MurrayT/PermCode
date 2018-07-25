@@ -1,0 +1,84 @@
+package permlib.utilities;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+public class StrongComposition {
+    private final int value;
+    private final int[] elements;
+    private final int length;
+
+    public StrongComposition(int... n) {
+        elements = n;
+        value = IntStream.of(elements).sum();
+        length = elements.length;
+    }
+
+
+    public StrongComposition() {
+        elements = new int[0];
+        value = 0;
+        length = 0;
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(elements);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(elements);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof StrongComposition) && Arrays.equals(((StrongComposition) obj).elements, this.elements);
+    }
+
+
+    public static boolean contains(StrongComposition container, StrongComposition pattern){
+        int patternLayerToMatch = 0;
+        int containerLayerToLook = 0;
+        while (containerLayerToLook <= container.length - pattern.length + patternLayerToMatch){
+            if (container.elements[containerLayerToLook] >= pattern.elements[patternLayerToMatch]) {
+                patternLayerToMatch++;
+            }
+            if (patternLayerToMatch == pattern.length){
+                return true;
+            }
+            containerLayerToLook++;
+        }
+        return false;
+    }
+
+    public static List<int[]> occurrences(StrongComposition container, StrongComposition pattern){
+        List<int[]> result = new ArrayList<>();
+
+        for (int[] comb: new Combinations(container.length, pattern.length)){
+//            System.err.println(Arrays.toString(comb));
+            boolean match = true;
+            for (int i=0; i<comb.length; i++) {
+                if (!(match = container.elements[comb[i]] >= pattern.elements[i])) {
+                    break;
+                }
+            }
+            if (match){
+                System.err.println(Arrays.toString(comb));
+                result.add(Arrays.copyOf(comb,comb.length));
+            }
+        }
+        return result;
+    }
+
+
+
+    public static void main(String[] args) {
+        StrongComposition sc1 = new StrongComposition(1,3,3,2,5,7);
+        StrongComposition sc2 = new StrongComposition(new int[]{1,2,4,1});
+        System.out.println(occurrences(sc1, sc2).stream().map(Arrays::toString).collect(Collectors.toList()));
+    }
+}
