@@ -6,11 +6,69 @@ import java.util.stream.IntStream;
 
 public class Math {
 
-    private static int power(int n, int k, int p){
+    private static boolean[] sieve;
+    private static int primeMax = 0;
 
+    private static int power(int n, int k, int p){
+        int E=0;
+        int r = 0;
+        if (p > n-k)
+            return 1;
+        if (p > n/2)
+            return 0;
+        if (p*p > n){
+            if (n%p < k%p)
+                return 1;
+        }
+        int a, b;
+        while (n>0){
+            a = n%p;
+            n = n/p;
+            b = k%p + r;
+            k = k/p;
+            if (a<b){
+                E++;
+                r = 1;
+            } else {
+                r = 0;
+            }
+        }
+        return E;
     }
     public static int binomial(int n, int k){
-        return 0;
+        if (k>n/2){
+            k = n-k;
+        }
+        int binom=1;
+        for (int p: primes(n)){
+            int N =n;
+            int K = k;
+            int r = 0;
+            if (p > N-K){
+                binom *= p;
+                continue;
+            }
+            if (p > N/2) {
+                continue;
+            }
+            if (p*p > N){
+                if (N%p < K%p) {
+                    binom *= p;
+                    continue;
+                }
+            }
+            while (N>0){
+                N = N/p;
+                K = K/p;
+                if (N%p<K%p + r){
+                    binom=binom*p;
+                    r = 1;
+                } else {
+                    r = 0;
+                }
+            }
+        }
+        return binom;
     }
 
     public static Primes primes(int n){
@@ -20,19 +78,21 @@ public class Math {
     private static class Primes implements Iterable<Integer> {
 
         private final int n;
-        private final boolean[] sieve;
 
-        public Primes(int n) {
+        Primes(int n) {
             this.n = n;
-            this.sieve = new boolean[n + 1];
-            eratosthenes();
+            if (n>primeMax) {
+                sieve = new boolean[n + 1];
+                eratosthenes();
+                primeMax = n;
+            }
         }
 
         private void eratosthenes() {
             Arrays.fill(sieve, true);
             sieve[0] = false;
             sieve[1] = false;
-            for (int factor = 0; factor * factor <= n; factor++) {
+            for (int factor = primeMax; factor * factor <= n; factor++) {
                 if (sieve[factor]) {
                     for (int j = factor; factor * j <= n; j++) {
                         sieve[factor * j] = false;
@@ -53,9 +113,17 @@ public class Math {
     }
 
     public static void main(String[] args) {
-        for (int p: primes(5)){
-            System.out.println(p);
+        int count = 0;
+        for (int p: primes(24)){
+            int pow = power(24,6, p);
+            if (pow > 0){
+                System.out.println(p + ": " +pow);
+                count++;
+            }
         }
+        System.out.println("count: "+count);
+
+        System.out.println(binomial(24,6));
     }
 
 }
