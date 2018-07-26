@@ -9,7 +9,11 @@ public class IntPair implements Comparable<IntPair> {
     
     private int first;
     private int second;
-    
+
+
+    public static IntPair of(int first, int second){
+        return new IntPair(first, second);
+    }
     /**
      * Constructs a pair of integers.
      * 

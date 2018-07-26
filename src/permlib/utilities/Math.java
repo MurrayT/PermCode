@@ -1,7 +1,9 @@
 package permlib.utilities;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 public class Math {
@@ -112,19 +114,5 @@ public class Math {
             return IntStream.rangeClosed(1, n).filter(o -> sieve[o]).iterator();
         }
     }
-
-    public static void main(String[] args) {
-        int count = 0;
-        for (int p: primes(25)){
-            int pow = binomialPower(25,6, p);
-            if (pow > 0){
-                System.out.println(p + ": " +pow);
-                count++;
-            }
-        }
-        System.out.println("count: "+count);
-
-        System.out.println(binomial(25,6));
-    }
-
+    
 }
