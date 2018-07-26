@@ -9,7 +9,7 @@ public class Math {
     private static boolean[] sieve;
     private static int primeMax = 0;
 
-    private static int power(int n, int k, int p){
+    private static int binomialPower(int n, int k, int p){
         int E=0;
         int r = 0;
         if (p > n-k)
@@ -35,17 +35,18 @@ public class Math {
         }
         return E;
     }
-    public static int binomial(int n, int k){
+
+    public static long binomial(int n, int k){
         if (k>n/2){
             k = n-k;
         }
-        int binom=1;
+        long binomial=1;
         for (int p: primes(n)){
-            int N =n;
+            int N = n;
             int K = k;
             int r = 0;
             if (p > N-K){
-                binom *= p;
+                binomial *= p;
                 continue;
             }
             if (p > N/2) {
@@ -53,22 +54,22 @@ public class Math {
             }
             if (p*p > N){
                 if (N%p < K%p) {
-                    binom *= p;
+                    binomial *= p;
                     continue;
                 }
             }
             while (N>0){
-                N = N/p;
-                K = K/p;
                 if (N%p<K%p + r){
-                    binom=binom*p;
+                    binomial=binomial*p;
                     r = 1;
                 } else {
                     r = 0;
                 }
+                N = N/p;
+                K = K/p;
             }
         }
-        return binom;
+        return binomial;
     }
 
     public static Primes primes(int n){
@@ -114,8 +115,8 @@ public class Math {
 
     public static void main(String[] args) {
         int count = 0;
-        for (int p: primes(24)){
-            int pow = power(24,6, p);
+        for (int p: primes(25)){
+            int pow = binomialPower(25,6, p);
             if (pow > 0){
                 System.out.println(p + ": " +pow);
                 count++;
@@ -123,7 +124,7 @@ public class Math {
         }
         System.out.println("count: "+count);
 
-        System.out.println(binomial(24,6));
+        System.out.println(binomial(25,6));
     }
 
 }

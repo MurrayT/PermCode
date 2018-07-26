@@ -59,7 +59,6 @@ public class StrongComposition {
         List<int[]> result = new ArrayList<>();
 
         for (int[] comb: new Combinations(container.length, pattern.length)){
-//            System.err.println(Arrays.toString(comb));
             boolean match = true;
             for (int i=0; i<comb.length; i++) {
                 if (!(match = container.elements[comb[i]] >= pattern.elements[i])) {
@@ -67,18 +66,32 @@ public class StrongComposition {
                 }
             }
             if (match){
-                System.err.println(Arrays.toString(comb));
                 result.add(Arrays.copyOf(comb,comb.length));
             }
         }
         return result;
     }
 
-
+    public static long occurrenceCount(StrongComposition container, StrongComposition pattern){
+        long count = 0;
+        for (int[] occ: occurrences(container, pattern)){
+            long partial = 1;
+            for (int i=0; i < occ.length; i++){
+                partial *= Math.binomial(container.elements[occ[i]], pattern.elements[i]);
+            }
+            count += partial;
+        }
+        return count;
+    }
 
     public static void main(String[] args) {
         StrongComposition sc1 = new StrongComposition(1,3,3,2,5,7);
         StrongComposition sc2 = new StrongComposition(new int[]{1,2,4,1});
-        System.out.println(occurrences(sc1, sc2).stream().map(Arrays::toString).collect(Collectors.toList()));
+//        System.out.println(occurrences(sc1, sc2).stream().map(Arrays::toString).collect(Collectors.toList()));
+
+        StrongComposition sc3 = new StrongComposition(1,2,2,1);
+        StrongComposition sc4 = new StrongComposition(1,4,3,2);
+        System.out.println(occurrences(sc4, sc3).stream().map(Arrays::toString).collect(Collectors.toList()));
+        System.out.println(occurrenceCount(sc4, sc3));
     }
 }
