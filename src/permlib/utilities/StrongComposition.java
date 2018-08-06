@@ -17,11 +17,54 @@ public class StrongComposition {
         length = elements.length;
     }
 
+    public StrongComposition(Integer[] n) {
+        elements = Arrays.stream(n).mapToInt(i->i).toArray();
+        value = IntStream.of(elements).sum();
+        length = elements.length;
+    }
+
 
     public StrongComposition() {
         elements = new int[0];
         value = 0;
         length = 0;
+    }
+
+    /**
+     * Constructor that creates a permutation from a string. The string may be
+     * white space separated in which case each token is treated as the value of
+     * an element, or not, in which case each token is treated as a digit. In
+     * the latter case you can use any characters you like in the input string.
+     * If they are normal digits they will be ordered normally, but in general
+     * the character ordering will be used. Ignoring punctuation symbols, this
+     * is 0-9, upper case letters, lower case letters.
+     *
+     * @param input the string representing this permutation
+     */
+    public StrongComposition(String input) {
+        input = input.trim();
+        if (input.equals("")) {
+            elements = new int[0];
+            value = 0;
+            length = 0;
+            return;
+        }
+        int[] values;
+        String[] stringValues = input.split(" ");
+        if (stringValues.length == 1) {
+            values = new int[input.length()];
+            for (int i = 0; i < values.length; i++) {
+                values[i] = Integer.parseInt(String.valueOf(input.charAt(i)));
+            }
+        } else {
+            values = new int[stringValues.length];
+            for (int i = 0; i < values.length; i++) {
+                values[i] = Integer.parseInt(String.valueOf(input.charAt(i)));
+            }
+        }
+        this.elements = values;
+        this.value = IntStream.of(elements).sum();
+        this.length = elements.length;
     }
 
     @Override
@@ -93,5 +136,10 @@ public class StrongComposition {
         StrongComposition sc4 = new StrongComposition(1,4,3,2);
         System.out.println(occurrences(sc3, sc4).stream().map(Arrays::toString).collect(Collectors.toList()));
         System.out.println(occurrenceCount(sc3, sc4));
+
+        StrongComposition pattern = new StrongComposition(1,2,1);
+        StrongComposition text = new StrongComposition(4,2,1);
+
+        System.out.println(StrongComposition.occurrenceCount(pattern,text));
     }
 }

@@ -6,10 +6,12 @@ public class CompositionsIterator implements Iterator<StrongComposition> {
 
     private final int n;
     private int[] comp;
+    private int i;
 
     public CompositionsIterator(int n) {
         this.n = n;
         comp = new int[n];
+        i =0;
     }
 
     /**
@@ -36,23 +38,21 @@ public class CompositionsIterator implements Iterator<StrongComposition> {
         if (n==0){
             return new StrongComposition();
         }
-        int i,diff=n+1;
-        for (i=0; i<comp.length && comp[i] != 0;i++);
         if (i==0){
             Arrays.fill(comp, 1);
+            i = n;
         } else {
-            if (i>1) {
-                comp[i - 2]++; // Increment the second to last non-zero element
-                diff = comp[--i]; // record the value of the last non-zero element so that can fill the right number of ones
-                comp[i] = 0; // Throw away the last non-zero element;
+            comp[i - 2]++; // Increment the second to last non-zero element
+            int diff = comp[--i]; // record the value of the last non-zero element so that can fill the right number of ones
+            comp[i] = 0; // Throw away the last non-zero element;
 
-                // Fill the array so our composition has the correct size
-                if (diff > 1){
-                    Arrays.fill(comp, i, i+diff-1, 1);
-                }
+            // Fill the array so our composition has the correct size
+            if (diff > 1){
+                Arrays.fill(comp, i, i+diff-1, 1);
+                i = i+diff-1;
             }
         }
-        return new StrongComposition(Arrays.copyOfRange(comp, 0, i+diff-1));
+        return new StrongComposition(Arrays.copyOfRange(comp, 0, i));
     }
 
     public static void main(String[] args) {

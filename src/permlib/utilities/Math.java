@@ -11,69 +11,43 @@ public class Math {
     private static boolean[] sieve;
     private static int primeMax = 0;
 
-    private static int binomialPower(int n, int k, int p){
-        int E=0;
-        int r = 0;
-        if (p > n-k)
-            return 1;
-        if (p > n/2)
-            return 0;
-        if (p*p > n){
-            if (n%p < k%p)
-                return 1;
+    public static long gcd(int a, int b){
+        int r=a%b;
+        while (r!=0){
+            a = b;
+            b = r;
+            r = a%b;
         }
-        int a, b;
-        while (n>0){
-            a = n%p;
-            n = n/p;
-            b = k%p + r;
-            k = k/p;
-            if (a<b){
-                E++;
-                r = 1;
-            } else {
-                r = 0;
-            }
+        return b;
+    }
+
+    public static long gcd(long a, long b){
+        long r=a%b;
+        while (r!=0){
+            a = b;
+            b = r;
+            r = a%b;
         }
-        return E;
+        return b;
     }
 
     public static long binomial(int n, int k){
         if (k>n/2){
             k = n-k;
         }
-        long binomial=1;
-        for (int p: primes(n)){
-            int N = n;
-            int K = k;
-            int r = 0;
-            if (p > N-K){
-                binomial *= p;
-                continue;
-            }
-            if (p > N/2) {
-                continue;
-            }
-            if (p*p > N){
-                if (N%p < K%p) {
-                    binomial *= p;
-                    continue;
-                }
-            }
-            while (N>0){
-                if (N%p<K%p + r){
-                    binomial=binomial*p;
-                    r = 1;
-                } else {
-                    r = 0;
-                }
-                N = N/p;
-                K = K/p;
-            }
+        if (n<0 || k<0){
+            return 0;
         }
-        return binomial;
+        if (k==0){
+            return 1;
+        }
+        long binom = n-k+1;
+        for (long i=2; i<=k; i++){
+            binom *= n-k+i;
+            binom /= i;
+        }
+        return binom;
     }
-
     public static Primes primes(int n){
         return new Primes(n);
     }
@@ -114,5 +88,8 @@ public class Math {
             return IntStream.rangeClosed(1, n).filter(o -> sieve[o]).iterator();
         }
     }
-    
+
+    public static void main(String[] args) {
+        System.out.println(binomial(13,4));
+    }
 }
