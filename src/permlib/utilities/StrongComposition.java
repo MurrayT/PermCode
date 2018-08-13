@@ -7,7 +7,7 @@ import java.util.stream.IntStream;
 public class StrongComposition {
     public final int value;
     private final int[] elements;
-    private final int length;
+    public final int length;
 
     public StrongComposition(int... n) {
         elements = n;
@@ -128,19 +128,10 @@ public class StrongComposition {
         return new StrongComposition(bigger);
     }
 
-    public static boolean isInitiallyPersistent(StrongComposition p) {
-        if (p.elements[0] > 1 || p.elements[p.length - 1] > 1) {
-            return false; // This is true persistence so is not interesting
-        }
-        int last = 0;
-        for (int e : p.elements) {
-            if (e > 1 && last > 1 && e == last) {
-                return true;
-            }
-            last = e;
-        }
-        return false;
+    public int[] getElements() {
+        return Arrays.copyOf(elements, elements.length);
     }
+
 
     public Integer[] getBoxedElements(){
         return Arrays.stream(elements).boxed().toArray(Integer[]::new);

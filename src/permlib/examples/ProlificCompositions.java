@@ -8,10 +8,27 @@ import java.util.Map;
 
 public class ProlificCompositions {
 
+    private static boolean isInitiallyPersistent(StrongComposition p) {
+        int[] elements = p.getElements();
+        int length = p.length;
+        if (elements[0] > 1 || elements[length - 1] > 1) {
+            return false; // This is true persistence so is not interesting
+        }
+        int last = 0;
+        for (int e : elements) {
+            if (e > 1 && last > 1 && e == last) {
+                return true;
+            }
+            last = e;
+        }
+        return false;
+    }
+
+
     public static void main(String[] args) {
 //        StrongComposition pattern = new StrongComposition(1,2,2,1);
-        for (StrongComposition pattern : new StrongCompositions(8)) {
-            if (StrongComposition.isInitiallyPersistent(pattern)) {
+        for (StrongComposition pattern : new StrongCompositions(7)) {
+            if (isInitiallyPersistent(pattern)) {
                 StrongComposition sc = StrongComposition.prolificExtension(pattern);
                 long occurrence_count = StrongComposition.occurrenceCount(pattern, sc);
                 Map<Long, Integer> map = new HashMap<>();
