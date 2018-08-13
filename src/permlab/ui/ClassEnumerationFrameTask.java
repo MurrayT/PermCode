@@ -229,7 +229,7 @@ public class ClassEnumerationFrameTask extends SwingWorker<Void, long[]> {
             rowNumber++;
         }
         for (int i = 1; i < row.length; i++) {
-            tableFrame.getModel().setValueAt(new Long(row[i]), rowNumber, i);
+            tableFrame.getModel().setValueAt(row[i], rowNumber, i);
         }
     }
 

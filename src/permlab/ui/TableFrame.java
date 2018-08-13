@@ -342,7 +342,7 @@ public class TableFrame extends javax.swing.JFrame {
      * @return true if user confirms, false otherwise
      */
     private boolean confirmed() {
-        Long totalPerms = new Long(0);
+        Long totalPerms = 0L;
         for (int i = 0; i < selectedRowIndices.length; i++) {
             for (int j = 0; j < selectedColumnIndices.length; j++) {
                 totalPerms += (Long) (enumerationTable.getValueAt(selectedRowIndices[i] - 1, selectedColumnIndices[j] + 1));

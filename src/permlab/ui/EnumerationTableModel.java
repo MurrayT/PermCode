@@ -29,7 +29,7 @@ public final class EnumerationTableModel extends AbstractTableModel {
         columnNames[0] = "N";
         System.arraycopy(titles, 0, columnNames, 1, titles.length);
         for(int i = 0; i < lengths.length; i++) {
-            setValueAt(new Long(lengths[i]), i, 0);
+            setValueAt((long) lengths[i], i, 0);
         }
     }
 
