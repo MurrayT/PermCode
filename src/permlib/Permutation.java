@@ -205,7 +205,6 @@ public class Permutation implements Comparable<Permutation> {
     public int length() {
         return elements.length;
     }
-
     /**
      * Computes the inverse of this permutation.
      *
@@ -255,11 +254,11 @@ public class Permutation implements Comparable<Permutation> {
      * <code>0</code> through
      * <code>length-1</code> having the same pattern as the current elements.
      */
-    public void clean() {
-        int[] dirtyElements = new int[elements.length];
-        System.arraycopy(elements, 0, dirtyElements, 0, dirtyElements.length);
-        fillElementsFrom(dirtyElements, 0, elements.length);
-    }
+//    public void clean() {
+//        int[] dirtyElements = new int[elements.length];
+//        System.arraycopy(elements, 0, dirtyElements, 0, dirtyElements.length);
+//        fillElementsFrom(dirtyElements, 0, elements.length);
+//    }
 
     /**
      * Compares

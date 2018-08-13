@@ -123,6 +123,7 @@ public class PermUtilities {
         return new Permutation(q, SAFE);
     }
 
+    //TODO: Is this not the same as Permutation::patternAt? By other views the other one should not exist
     public static Permutation subpermutation(Permutation p, int[] indices) {
         int[] values = new int[indices.length];
         for (int i = 0; i < values.length; i++) {
@@ -185,8 +186,6 @@ public class PermUtilities {
     public static Permutation insert(Permutation p, int index, int value) {
         value = (value < 0 ? 0 : value);
         value = (value > p.elements.length ? p.elements.length : value);
-        index = (index < 0 ? 0 : index);
-        index = (index > p.elements.length ? p.elements.length : index);
         Permutation result = new Permutation(p.elements.length + 1);
         for (int i = 0; i < index; i++) {
             result.elements[i] = p.elements[i] + (p.elements[i] >= value ? 1 : 0);
@@ -760,22 +759,22 @@ public class PermUtilities {
         return new Permutation(elements, PermUtilities.SAFE);
     }
 
-    /**
-     * Returns the subpermutation of a permutation at a given (ordered) array of
-     * indices.
-     *
-     * @param p a permutation
-     * @param indices an ordered list of 0-based indices
-     * @return the permutation that occurs in the permutation at the indices
-     */
-    public static Permutation subPermutation(Permutation p, int[] indices) {
-        int[] values = new int[indices.length];
-        int count = 0;
-        for (int i : indices) {
-            values[count++] = i;
-        }
-        return new Permutation(values);
-    }
+//    /**
+//     * Returns the subpermutation of a permutation at a given (ordered) array of
+//     * indices.
+//     *
+//     * @param p a permutation
+//     * @param indices an ordered list of 0-based indices
+//     * @return the permutation that occurs in the permutation at the indices
+//     */
+//    public static Permutation subPermutation(Permutation p, int[] indices) {
+//        int[] values = new int[indices.length];
+//        int count = 0;
+//        for (int i : indices) {
+//            values[count++] = i;
+//        }
+//        return new Permutation(values);
+//    }
 
     /**
      * Returns the set of all subpermutations of a permutation
