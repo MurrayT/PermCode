@@ -1,10 +1,11 @@
 package permlib.examples;
 
+import permlib.utilities.CombinationsIncluding;
 import permlib.utilities.StrongComposition;
 import permlib.utilities.StrongCompositions;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ProlificCompositions {
 
@@ -24,25 +25,74 @@ public class ProlificCompositions {
         return false;
     }
 
+    static StrongComposition condense(StrongComposition me){
+        System.err.println(me);
+        int i,j;
+        for (i=0; i < me.length && me.getElements()[i]==1;i++); // Finds first non-one
+        for (j=me.length-1; j >= 0  && me.getElements()[j]==1;j--); //Finds last non-one
+        if (i==0)
+        System.err.println(i + ", " + j);
+        System.err.println("___");
+        return new StrongComposition();
+    }
 
-    public static void main(String[] args) {
-//        StrongComposition pattern = new StrongComposition(1,2,2,1);
-        for (StrongComposition pattern : new StrongCompositions(7)) {
-            if (isInitiallyPersistent(pattern)) {
-                StrongComposition sc = StrongComposition.prolificExtension(pattern);
-                long occurrence_count = StrongComposition.occurrenceCount(pattern, sc);
-                Map<Long, Integer> map = new HashMap<>();
-                for (StrongComposition comp : new StrongCompositions(sc.value+1)) {
-                    long occCount = StrongComposition.occurrenceCount(pattern, comp);
-                    if (occCount == 19L) {
-//                        System.out.println(comp);
+
+    static boolean isProlific(StrongComposition text, StrongComposition pattern) {
+        List<Integer> textList = Arrays.stream(text.getElements()).boxed().collect(Collectors.toList());
+        for (int gap = 0; gap <= textList.size(); gap++) {
+            List<Integer> textListCopy = new ArrayList<>(textList);
+            textListCopy.add(gap, 1); // For each gap we try to put in a singleton layer
+            if ((gap > 0 && textListCopy.get(gap - 1) > 1) || // If the layer before is of size one we don't need to check
+                    (gap < textList.size() && textListCopy.get(gap + 1) > 1)) { // If the layer after is size one we don't need to check
+                boolean match = true;
+                for (int[] comb : new CombinationsIncluding(textListCopy.size(), pattern.length, gap)) { //Go through the combinations of layers including the gap layer
+                    match = true;
+                    for (int i = 0; i < comb.length; i++) {
+                        if (!(match = textListCopy.get(comb[i]) >= pattern.getElements()[i])) {     // If we fail on a layer for a combination we don't check that comb any further
+                            break;
+                        }
                     }
-                    map.put(occCount, map.getOrDefault(occCount, 0) + 1);
+                    if (match) {
+                        break;  // If we match we don't need to check any more combinations with this gap
+                    }
                 }
-                System.err.printf("The expansion of %s (%s) has %d occurrences. There are %d patterns with that many occurrences in length %d\n",
-                        pattern.toString(), sc.toString(), occurrence_count, map.getOrDefault(occurrence_count, 0), sc.value + 1);
-
+                if (!match) {
+                    return false; // If we fail on a gap we are done.
+                }
             }
         }
+        return true;
     }
-}
+
+    public static void main(String[] args) {
+//        condense(new StrongComposition(1,1,1,2,2,1,2,3,4,5,1,1));
+        Set<StrongComposition> seen = new HashSet<>();
+//        for (int pattlen = 1; pattlen < 13; pattlen++) {
+//            for (StrongComposition pattern : new StrongCompositions(pattlen)) {
+                StrongComposition pattern = new StrongComposition(1,2,2,1,1,1,2,2,1);
+                int pattlen = pattern.value;
+                StrongComposition condensed = pattern;
+                if (!seen.contains(condensed)) {
+                    seen.add(condensed);
+                    seen.add(StrongComposition.reverse(condensed));
+
+                    if (isInitiallyPersistent(pattern)) {
+                        boolean flag = false;
+                        int length = pattlen;
+                        while (length < 20 && !flag) {
+                            for (StrongComposition comp : new StrongCompositions(length)) {
+                                if (StrongComposition.canCover(pattern, comp, true)) {
+                                    if (isProlific(comp, pattern)) {
+                                        System.out.printf("%9s,%15s\n", pattern, comp);
+                                        flag = true;
+                                    }
+                                }
+                            }
+                            length++;
+                        }
+                    }
+                }
+            }
+        }
+//    }
+//}

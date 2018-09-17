@@ -42,9 +42,12 @@ public class Math {
             return 1;
         }
         long binom = n-k+1;
+        System.err.println(binom);
         for (long i=2; i<=k; i++){
             binom *= n-k+i;
+            System.err.println(binom);
             binom /= i;
+            System.err.println(binom);
         }
         return binom;
     }

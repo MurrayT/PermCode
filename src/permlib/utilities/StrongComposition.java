@@ -1,6 +1,7 @@
 package permlib.utilities;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -66,10 +67,14 @@ public class StrongComposition {
     }
 
     public static boolean contains(StrongComposition pattern, StrongComposition container) {
+        return contains(pattern.elements, container.elements);
+    }
+
+    public static boolean contains(int[] pattern, int[] container) {
         int patternLayerToMatch = 0;
         int containerLayerToLook = 0;
         while (containerLayerToLook <= container.length - pattern.length + patternLayerToMatch) {
-            if (container.elements[containerLayerToLook] >= pattern.elements[patternLayerToMatch]) {
+            if (container[containerLayerToLook] >= pattern[patternLayerToMatch]) {
                 patternLayerToMatch++;
             }
             if (patternLayerToMatch == pattern.length) {
@@ -109,32 +114,46 @@ public class StrongComposition {
         return count;
     }
 
-    public static StrongComposition prolificExtension(StrongComposition pattern) {
-        int[] bigger = new int[pattern.length + 1];
-        for (int index = 0; index < bigger.length; index++) {
-            int first, second;
-            if (index == 0) {
-                first = 0;
-                second = pattern.elements[index];
-            } else if (index == pattern.length) {
-                first = pattern.elements[index - 1];
-                second = 0;
-            } else {
-                first = pattern.elements[index - 1];
-                second = pattern.elements[index];
-            }
-            bigger[index] = java.lang.Math.max(first, second);
-        }
-        return new StrongComposition(bigger);
-    }
-
     public int[] getElements() {
         return Arrays.copyOf(elements, elements.length);
     }
 
+    public static boolean canCover(StrongComposition pattern, StrongComposition text){
+        return occurrences(pattern, text).stream().flatMapToInt(Arrays::stream).boxed().collect(Collectors.toSet()).size() == text.length;
+    }
+
+    public static boolean canCover(StrongComposition pattern, StrongComposition text, Boolean b) {
+        Set<Integer> toMatch = IntStream.range(0, text.length).boxed().collect(Collectors.toSet());
+//        System.err.println(toMatch);
+        if (pattern.length > text.length)
+            return false;
+
+        for (int[] comb : new Combinations(text.length, pattern.length)) {
+            boolean match = true;
+            for (int i = 0; i < comb.length; i++) {
+                if (!(match = text.getElements()[comb[i]] >= pattern.getElements()[i])) {
+                    break;
+                }
+            }
+            if (match) {
+//                System.err.println(Arrays.toString(comb));
+                toMatch.removeAll(Arrays.stream(comb).boxed().collect(Collectors.toSet()));
+            }
+            if (toMatch.isEmpty()){
+                return true;
+            }
+        }
+        return false;
+    }
 
     public Integer[] getBoxedElements(){
         return Arrays.stream(elements).boxed().toArray(Integer[]::new);
+    }
+
+    public static StrongComposition reverse(StrongComposition me){
+        List<Integer> list = Arrays.asList(me.getBoxedElements());
+        Collections.reverse(list);
+        return new StrongComposition(list.toArray(new Integer[0]));
     }
 
     @Override
