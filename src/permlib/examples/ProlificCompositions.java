@@ -26,14 +26,14 @@ public class ProlificCompositions {
     }
 
     static StrongComposition condense(StrongComposition me){
-        System.err.println(me);
+//        System.err.println(me);
         int i,j;
         for (i=0; i < me.length && me.getElements()[i]==1;i++); // Finds first non-one
         for (j=me.length-1; j >= 0  && me.getElements()[j]==1;j--); //Finds last non-one
-        if (i==0)
-        System.err.println(i + ", " + j);
-        System.err.println("___");
-        return new StrongComposition();
+        if (i==0) i=1;
+        if (j==me.length-1) j=me.length-2;
+        if (i>j){ i=1; j=-1;}
+        return new StrongComposition(Arrays.copyOfRange(me.getElements(), i-1, j+2));
     }
 
 
@@ -65,34 +65,63 @@ public class ProlificCompositions {
     }
 
     public static void main(String[] args) {
-//        condense(new StrongComposition(1,1,1,2,2,1,2,3,4,5,1,1));
+        condense(new StrongComposition(1,1,1));
         Set<StrongComposition> seen = new HashSet<>();
-//        for (int pattlen = 1; pattlen < 13; pattlen++) {
-//            for (StrongComposition pattern : new StrongCompositions(pattlen)) {
-                StrongComposition pattern = new StrongComposition(1,2,2,1,1,1,2,2,1);
-                int pattlen = pattern.value;
-                StrongComposition condensed = pattern;
+
+        for (int pattlen = 1; pattlen < 15; pattlen++) {
+            for (StrongComposition pattern : new StrongCompositions(pattlen)) {
+//                StrongComposition pattern = new StrongComposition(1,2,2,1,1,1,2,2,1);
+//                int pattlen = pattern.value;
+                StrongComposition condensed = condense(pattern);
                 if (!seen.contains(condensed)) {
                     seen.add(condensed);
                     seen.add(StrongComposition.reverse(condensed));
 
-                    if (isInitiallyPersistent(pattern)) {
+                    if (isInitiallyPersistent(pattern) && !isSingleBlocked(pattern)) {
+                        Set<StrongComposition> minimals = new HashSet<>();
                         boolean flag = false;
                         int length = pattlen;
                         while (length < 20 && !flag) {
                             for (StrongComposition comp : new StrongCompositions(length)) {
                                 if (StrongComposition.canCover(pattern, comp, true)) {
                                     if (isProlific(comp, pattern)) {
-                                        System.out.printf("%9s,%15s\n", pattern, comp);
+                                        minimals.add(comp);
+//                                        System.out.printf("%9s,%15s\n", pattern, comp);
                                         flag = true;
                                     }
                                 }
                             }
                             length++;
                         }
+                        if (minimals.size() > 1) {
+                            System.out.printf("%9s", pattern);
+                            for (StrongComposition min :
+                                    minimals) {
+                                System.out.printf(",%15s", min);
+                            }
+                            System.out.println();
+                        }
                     }
                 }
             }
         }
-//    }
-//}
+    }
+
+    private static boolean isSingleBlocked(StrongComposition pattern) {
+        boolean seenStart = false;
+        boolean maybeEnd = false;
+        int[] elements = pattern.getElements();
+        for (int element : elements) {
+            if (!seenStart && element > 1) {
+                seenStart = true;
+            }
+            if (seenStart && element == 1) {
+                maybeEnd = true;
+            }
+            if (maybeEnd && element > 1) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
