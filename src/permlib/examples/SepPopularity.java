@@ -7,7 +7,7 @@ import permlib.Permutation;
 import permlib.Permutations;
 import permlib.classes.PermClassInterface;
 import permlib.classes.PermutationClass;
-import permlib.utilities.Combinations;
+import utilities.Combinations;
 
 /**
  * Look for examples of equipopularity in Sep

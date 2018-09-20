@@ -9,7 +9,7 @@ import permlib.Permutations;
 import permlib.Symmetry;
 import permlib.property.ConsecutiveAvoidanceTest;
 import permlib.property.PermProperty;
-import permlib.utilities.Combinations;
+import utilities.Combinations;
 
 /**
  *

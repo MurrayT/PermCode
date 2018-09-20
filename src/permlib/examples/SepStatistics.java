@@ -1,7 +1,6 @@
 package permlib.examples;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
@@ -9,7 +8,7 @@ import permlib.PermUtilities;
 import permlib.Permutation;
 import permlib.Permutations;
 import permlib.classes.PermutationClass;
-import permlib.utilities.Combinations;
+import utilities.Combinations;
 
 /**
  * Compile evidence about equidistribution of statistics in Sep

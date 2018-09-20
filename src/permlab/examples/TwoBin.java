@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import permlib.Permutation;
 import permlib.Permutations;
-import permlib.utilities.Combinations;
+import utilities.Combinations;
 
 /**
  *

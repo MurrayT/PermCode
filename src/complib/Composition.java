@@ -1,29 +1,31 @@
-package permlib.utilities;
+package complib;
+
+import utilities.Combinations;
+import utilities.Math;
 
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class StrongComposition {
+public class Composition {
     public final int value;
     private final int[] elements;
     public final int length;
 
-    public StrongComposition(int... n) {
+    public Composition(int... n) {
         elements = n;
         value = IntStream.of(elements).sum();
         length = elements.length;
     }
 
-    public StrongComposition(Integer[] n) {
+    public Composition(Integer[] n) {
         elements = Arrays.stream(n).mapToInt(i -> i).toArray();
         value = IntStream.of(elements).sum();
         length = elements.length;
     }
 
 
-    public StrongComposition() {
+    public Composition() {
         elements = new int[0];
         value = 0;
         length = 0;
@@ -40,7 +42,7 @@ public class StrongComposition {
      *
      * @param input the string representing this permutation
      */
-    public StrongComposition(String input) {
+    public Composition(String input) {
         input = input.trim();
         if (input.equals("")) {
             elements = new int[0];
@@ -66,7 +68,27 @@ public class StrongComposition {
         this.length = elements.length;
     }
 
-    public static boolean contains(StrongComposition pattern, StrongComposition container) {
+    public Composition(Composition p) {
+        elements = Arrays.copyOf(p.elements,p.length);
+        length = p.length;
+        value = p.value;
+    }
+
+    public Composition concat(Composition other){
+        int[] newElements = Arrays.copyOf(elements, this.length+other.length);
+        for (int i = 0; i < other.length; i++){
+            newElements[this.length+i] = other.elements[i];
+        }
+        return new Composition(newElements);
+    }
+
+    public Composition concat(int other){
+        int[] newElements = Arrays.copyOf(elements, this.length+1);
+        newElements[this.length] = other;
+        return new Composition(newElements);
+    }
+
+    public static boolean contains(Composition pattern, Composition container) {
         return contains(pattern.elements, container.elements);
     }
 
@@ -85,7 +107,7 @@ public class StrongComposition {
         return false;
     }
 
-    public static List<int[]> occurrences(StrongComposition pattern, StrongComposition container) {
+    public static List<int[]> occurrences(Composition pattern, Composition container) {
         List<int[]> result = new ArrayList<>();
 
         for (int[] comb : new Combinations(container.length, pattern.length)) {
@@ -102,7 +124,7 @@ public class StrongComposition {
         return result;
     }
 
-    public static long occurrenceCount(StrongComposition pattern, StrongComposition container) {
+    public static long occurrenceCount(Composition pattern, Composition container) {
         long count = 0;
         for (int[] occ : occurrences(pattern, container)) {
             long partial = 1;
@@ -118,13 +140,12 @@ public class StrongComposition {
         return Arrays.copyOf(elements, elements.length);
     }
 
-    public static boolean canCover(StrongComposition pattern, StrongComposition text){
+    public static boolean canCover(Composition pattern, Composition text){
         return occurrences(pattern, text).stream().flatMapToInt(Arrays::stream).boxed().collect(Collectors.toSet()).size() == text.length;
     }
 
-    public static boolean canCover(StrongComposition pattern, StrongComposition text, Boolean b) {
+    public static boolean canCover(Composition pattern, Composition text, Boolean b) {
         Set<Integer> toMatch = IntStream.range(0, text.length).boxed().collect(Collectors.toSet());
-//        System.err.println(toMatch);
         if (pattern.length > text.length)
             return false;
 
@@ -136,7 +157,6 @@ public class StrongComposition {
                 }
             }
             if (match) {
-//                System.err.println(Arrays.toString(comb));
                 toMatch.removeAll(Arrays.stream(comb).boxed().collect(Collectors.toSet()));
             }
             if (toMatch.isEmpty()){
@@ -150,10 +170,10 @@ public class StrongComposition {
         return Arrays.stream(elements).boxed().toArray(Integer[]::new);
     }
 
-    public static StrongComposition reverse(StrongComposition me){
+    public static Composition reverse(Composition me){
         List<Integer> list = Arrays.asList(me.getBoxedElements());
         Collections.reverse(list);
-        return new StrongComposition(list.toArray(new Integer[0]));
+        return new Composition(list.toArray(new Integer[0]));
     }
 
     @Override
@@ -173,6 +193,6 @@ public class StrongComposition {
 
     @Override
     public boolean equals(Object obj) {
-        return (obj instanceof StrongComposition) && Arrays.equals(((StrongComposition) obj).elements, this.elements);
+        return (obj instanceof Composition) && Arrays.equals(((Composition) obj).elements, this.elements);
     }
 }

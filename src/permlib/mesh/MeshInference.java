@@ -5,9 +5,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import permlib.Permutation;
-import permlib.Permutations;
 import permlib.classes.UniversalPermClass;
-import permlib.utilities.Combinations;
+import utilities.Combinations;
 
 /**
  * This class contains methods that allow for the inference of mesh patterns avoided

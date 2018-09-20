@@ -9,7 +9,7 @@ import java.util.HashSet;
 import permlib.Permutation;
 import permlib.Permutations;
 import permlib.classes.SimplePermClass;
-import permlib.utilities.Combinations;
+import utilities.Combinations;
 
 /**
  * In Av(3142, 2143, 264514, 264135) the simples seem to satisfy s_n = s_{n-1} +

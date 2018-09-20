@@ -1,11 +1,11 @@
 package permlib.examples;
 
 import java.util.HashMap;
-import permlib.PermUtilities;
+
 import permlib.Permutation;
 import permlib.Permutations;
 import permlib.classes.PermutationClass;
-import permlib.utilities.Combinations;
+import utilities.Combinations;
 
 /**
  * Which patterns occur more frequently than others? Say p dominates q if in S_n

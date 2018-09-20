@@ -12,7 +12,7 @@ import permlib.Permutation;
 import permlib.Permutations;
 import permlib.property.PermProperty;
 import permlib.property.PlusIndecomposable;
-import permlib.utilities.Combinations;
+import utilities.Combinations;
 
 /**
  *

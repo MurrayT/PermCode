@@ -8,7 +8,7 @@ import java.util.Objects;
 import permlib.PermUtilities;
 import permlib.Permutation;
 import permlib.Permutations;
-import permlib.utilities.Combinations;
+import utilities.Combinations;
 
 /**
  * When is the inversion graph of a permutation decomposable into triangles?

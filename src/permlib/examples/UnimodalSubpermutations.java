@@ -13,8 +13,7 @@ import java.util.Random;
 import permlib.PermUtilities;
 import permlib.Permutation;
 import permlib.utilities.BTree;
-import permlib.utilities.Combinations;
-import permlib.utilities.Composition;
+import utilities.Combinations;
 
 /**
  *

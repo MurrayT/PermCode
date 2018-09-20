@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import permlib.PermUtilities;
 import permlib.Permutation;
-import permlib.utilities.Combinations;
+import utilities.Combinations;
 
 /**
  * This class represents a mesh pattern.

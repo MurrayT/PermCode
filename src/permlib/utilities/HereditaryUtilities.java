@@ -8,6 +8,7 @@ import permlib.Permutation;
 import permlib.processor.PermProcessor;
 import permlib.property.AvoidanceTest;
 import permlib.property.HereditaryProperty;
+import utilities.Combinations;
 
 /**
  * Static utility functions associated with hereditary properties

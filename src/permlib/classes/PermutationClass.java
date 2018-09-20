@@ -396,6 +396,7 @@ public class PermutationClass implements PermClassInterface {
         }
     }
 
-    private static interface SafeIterator {
+    private static interface
+    SafeIterator {
     }
 }

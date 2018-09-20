@@ -1,15 +1,16 @@
-package permlib.examples;
+package complib.examples;
 
-import permlib.utilities.CombinationsIncluding;
-import permlib.utilities.StrongComposition;
-import permlib.utilities.StrongCompositions;
+
+import complib.Composition;
+import complib.Compositions;
+import utilities.CombinationsIncluding;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class ProlificCompositions {
 
-    private static boolean isInitiallyPersistent(StrongComposition p) {
+    private static boolean isInitiallyPersistent(Composition p) {
         int[] elements = p.getElements();
         int length = p.length;
         if (elements[0] > 1 || elements[length - 1] > 1) {
@@ -18,14 +19,13 @@ public class ProlificCompositions {
         int last = 0;
         for (int e : elements) {
             if (e > 1 && last > 1 && e == last) {
-                return true;
-            }
+                return true;            }
             last = e;
         }
         return false;
     }
 
-    static StrongComposition condense(StrongComposition me){
+    static Composition condense(Composition me){
 //        System.err.println(me);
         int i,j;
         for (i=0; i < me.length && me.getElements()[i]==1;i++); // Finds first non-one
@@ -33,11 +33,11 @@ public class ProlificCompositions {
         if (i==0) i=1;
         if (j==me.length-1) j=me.length-2;
         if (i>j){ i=1; j=-1;}
-        return new StrongComposition(Arrays.copyOfRange(me.getElements(), i-1, j+2));
+        return new Composition(Arrays.copyOfRange(me.getElements(), i-1, j+2));
     }
 
 
-    static boolean isProlific(StrongComposition text, StrongComposition pattern) {
+    static boolean isProlific(Composition text, Composition pattern) {
         List<Integer> textList = Arrays.stream(text.getElements()).boxed().collect(Collectors.toList());
         for (int gap = 0; gap <= textList.size(); gap++) {
             List<Integer> textListCopy = new ArrayList<>(textList);
@@ -65,25 +65,25 @@ public class ProlificCompositions {
     }
 
     public static void main(String[] args) {
-        condense(new StrongComposition(1,1,1));
-        Set<StrongComposition> seen = new HashSet<>();
+        condense(new Composition(1,1,1));
+        Set<Composition> seen = new HashSet<>();
 
         for (int pattlen = 1; pattlen < 15; pattlen++) {
-            for (StrongComposition pattern : new StrongCompositions(pattlen)) {
+            for (Composition pattern : new Compositions(pattlen)) {
 //                StrongComposition pattern = new StrongComposition(1,2,2,1,1,1,2,2,1);
 //                int pattlen = pattern.value;
-                StrongComposition condensed = condense(pattern);
+                Composition condensed = condense(pattern);
                 if (!seen.contains(condensed)) {
                     seen.add(condensed);
-                    seen.add(StrongComposition.reverse(condensed));
+                    seen.add(Composition.reverse(condensed));
 
                     if (isInitiallyPersistent(pattern) && !isSingleBlocked(pattern)) {
-                        Set<StrongComposition> minimals = new HashSet<>();
+                        Set<Composition> minimals = new HashSet<>();
                         boolean flag = false;
                         int length = pattlen;
                         while (length < 20 && !flag) {
-                            for (StrongComposition comp : new StrongCompositions(length)) {
-                                if (StrongComposition.canCover(pattern, comp, true)) {
+                            for (Composition comp : new Compositions(length)) {
+                                if (Composition.canCover(pattern, comp, true)) {
                                     if (isProlific(comp, pattern)) {
                                         minimals.add(comp);
 //                                        System.out.printf("%9s,%15s\n", pattern, comp);
@@ -95,7 +95,7 @@ public class ProlificCompositions {
                         }
                         if (minimals.size() > 1) {
                             System.out.printf("%9s", pattern);
-                            for (StrongComposition min :
+                            for (Composition min :
                                     minimals) {
                                 System.out.printf(",%15s", min);
                             }
@@ -107,7 +107,7 @@ public class ProlificCompositions {
         }
     }
 
-    private static boolean isSingleBlocked(StrongComposition pattern) {
+    private static boolean isSingleBlocked(Composition pattern) {
         boolean seenStart = false;
         boolean maybeEnd = false;
         int[] elements = pattern.getElements();

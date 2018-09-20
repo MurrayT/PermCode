@@ -1,5 +1,7 @@
 package permlib.utilities;
 
+import utilities.Combinations;
+
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -18,7 +20,7 @@ public class MultisetCodes implements Iterable<int[]> {
     public MultisetCodes(int n, int k) {
         this.n = n;
         this.k = k;
-        this.cs = new Combinations(n + k - 1, k).iterator(); 
+        this.cs = new Combinations(n + k - 1, k).iterator();
     }
 
     @Override

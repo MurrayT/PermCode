@@ -3,7 +3,7 @@ package permlib;
 import permlib.classes.PermutationClass;
 import java.util.*;
 import permlib.property.*;
-import permlib.utilities.Combinations;
+import utilities.Combinations;
 import permlib.utilities.IntPair;
 import permlib.utilities.InvolutionUtilities;
 

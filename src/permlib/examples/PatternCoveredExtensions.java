@@ -4,7 +4,7 @@ import java.util.HashSet;
 import permlib.PermUtilities;
 import permlib.Permutation;
 import permlib.classes.PermutationClass;
-import permlib.utilities.Combinations;
+import utilities.Combinations;
 
 /**
  *

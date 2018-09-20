@@ -11,7 +11,7 @@ import java.util.Random;
 import permlib.Permutation;
 import permlib.classes.PermutationClass;
 import permlib.property.Involves;
-import permlib.utilities.Combinations;
+import utilities.Combinations;
 
 /**
  *

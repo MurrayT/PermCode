@@ -11,7 +11,7 @@ import permlib.PermUtilities;
 import permlib.Permutation;
 import permlib.classes.SimplePermClass;
 import permlib.processor.PermProcessor;
-import permlib.utilities.Combinations;
+import utilities.Combinations;
 
 /**
  * If an arbitrary permutation p is contained in a simple permutation s then is
