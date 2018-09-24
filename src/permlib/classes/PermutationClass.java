@@ -218,7 +218,6 @@ public class PermutationClass implements PermClassInterface {
         PermProperty restrictingProperty;
         Queue<Iterator<Permutation>> iterators = new ArrayDeque<>();
         Iterator<Permutation> currentIterator;
-        boolean safeIterator = false;
 
         PermutationClassIterator(int low, int high, PermProperty restrictingProperty) {
             this.low = low;
