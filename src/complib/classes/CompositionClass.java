@@ -105,7 +105,12 @@ public class CompositionClass implements CompositionClassInterface {
                         }
                     }
                 }
+                if (candidate.value >= low && (!(property instanceof HereditaryProperty) || property.test(candidate))){
+                    queueNext = candidate;
+                    return true;
+                }
             }
+            return false;
         }
 
         /**
@@ -116,7 +121,18 @@ public class CompositionClass implements CompositionClassInterface {
          */
         @Override
         public Composition next() {
-            return null;
+
+            if (!hasNext()) {
+                throw new NoSuchElementException("No elements remaining in involution class");
+            }
+            Composition result = queueNext;
+            queueNext = null;
+            return result;
         }
+    }
+
+    public static void main(String[] args) {
+        CompositionClass c = new CompositionClass();
+
     }
 }

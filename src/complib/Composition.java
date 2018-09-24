@@ -178,6 +178,8 @@ public class Composition implements Comparable<Composition>{
 
     @Override
     public String toString() {
+        if (value==0)
+            return "ε";
         String delim = "";
         int biggestPart = Collections.max(Arrays.asList(getBoxedElements()));
         if (biggestPart > 9){
