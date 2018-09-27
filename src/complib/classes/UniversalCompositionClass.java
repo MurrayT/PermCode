@@ -13,7 +13,7 @@ public class UniversalCompositionClass implements CompositionClassInterface, Ite
     private int maxLength = Integer.MAX_VALUE;
     private int currentLength;
     private Iterator<Composition> currentLengthIterator;
-    private Predicate<Composition> prop = new Universal();
+    private Predicate<Composition> prop = new Universal<>();
 
     /**
      * The class of (effectively) all permutations.
@@ -145,11 +145,6 @@ public class UniversalCompositionClass implements CompositionClassInterface, Ite
                     currentLengthIterator = new UniversalCompositionClass.CompositionsIterator(currentLength).iterator();
                 }
                 return true;
-//                if (currentLengthIterator.hasNext()) {
-//                    return true;
-//                }
-//
-//                return currentLengthIterator.hasNext();
             }
 
             @Override
@@ -192,16 +187,14 @@ public class UniversalCompositionClass implements CompositionClassInterface, Ite
                     if (n==0){
                         if (!done){
                             done = true;
-                            if (prop.test(new Composition(comp))){
-                                return true;
-                            }
+                            return prop.test(new Composition(comp));
                         } else {
                             return false;
                         }
                     } else {
                         while (comp[0] != n){
                             makeNext();
-                            System.err.println(Arrays.toString(comp));
+//                            System.err.println(Arrays.toString(comp));
                             if (prop.test(new Composition(comp))){
                                 return true;
                             }

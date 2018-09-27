@@ -65,13 +65,10 @@ public class ProlificCompositions {
     }
 
     public static void main(String[] args) {
-        condense(new Composition(1,1,1));
         Set<Composition> seen = new HashSet<>();
 
         for (int pattlen = 1; pattlen < 15; pattlen++) {
             for (Composition pattern : new Compositions(pattlen)) {
-//                StrongComposition pattern = new StrongComposition(1,2,2,1,1,1,2,2,1);
-//                int pattlen = pattern.value;
                 Composition condensed = condense(pattern);
                 if (!seen.contains(condensed)) {
                     seen.add(condensed);
@@ -81,7 +78,7 @@ public class ProlificCompositions {
                         Set<Composition> minimals = new HashSet<>();
                         boolean flag = false;
                         int length = pattlen;
-                        while (length < 20 && !flag) {
+                        while (length < 25 && !flag) {
                             for (Composition comp : new Compositions(length)) {
                                 if (Composition.canCover(pattern, comp, true)) {
                                     if (isProlific(comp, pattern)) {
@@ -93,7 +90,7 @@ public class ProlificCompositions {
                             }
                             length++;
                         }
-                        if (minimals.size() > 1) {
+//                        if (minimals.size() > 1) {
                             System.out.printf("%9s", pattern);
                             for (Composition min :
                                     minimals) {
@@ -101,7 +98,7 @@ public class ProlificCompositions {
                             }
                             System.out.println();
                         }
-                    }
+//                    }
                 }
             }
         }

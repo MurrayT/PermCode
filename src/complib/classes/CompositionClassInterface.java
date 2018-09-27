@@ -37,7 +37,6 @@ public interface CompositionClassInterface {
      * @param prop the property
      * @return the iterator
      */
-    @SuppressWarnings("unchecked")
     Iterator<Composition> getRestrictedIterator(int low, int high,
                                                        Predicate<Composition> prop);
 }

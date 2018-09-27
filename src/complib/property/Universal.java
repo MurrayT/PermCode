@@ -11,7 +11,7 @@ import permlib.Permutation;
  *
  * @author Michael Albert
  */
-public class Universal implements HereditaryProperty {
+public class Universal<T> implements HereditaryProperty<T> {
 
     /**
      * This property is always true
@@ -19,7 +19,7 @@ public class Universal implements HereditaryProperty {
      * @return <code>true</code>
      */
     @Override
-    public boolean test(Composition p) {
+    public boolean test(T p) {
         return true;
     }
 
@@ -39,12 +39,12 @@ public class Universal implements HereditaryProperty {
     }
 
     @Override
-    public Collection<Composition> getBasis() {
-        return new ArrayList<Composition>();
+    public Collection<T> getBasis() {
+        return new ArrayList<T>();
     }
 
     @Override
-    public Collection<Composition> getBasisTo(int n) {
+    public Collection<T> getBasisTo(int n) {
         return getBasis();
     }
 }
