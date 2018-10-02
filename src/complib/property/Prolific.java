@@ -27,6 +27,8 @@ public class Prolific implements Predicate<Composition> {
         for (int gap = 0; gap <= textList.size(); gap++) {
             List<Integer> textListCopy = new ArrayList<>(textList);
             textListCopy.add(gap, 1); // For each gap we try to put in a singleton layer
+            if ((gap > 0 && textListCopy.get(gap - 1) > 1) || // If the layer before is of size one we don't need to check
+                    (gap < textList.size() && textListCopy.get(gap + 1) > 1)) { // If the layer after is size one we don't need to check
                 boolean match = true;
                 for (int[] comb : new CombinationsIncluding(textListCopy.size(), pattern.length, gap)) { //Go through the combinations of layers including the gap layer
                     match = true;
@@ -43,6 +45,8 @@ public class Prolific implements Predicate<Composition> {
                     return false; // If we fail on a gap we are done.
                 }
             }
+        }
         return true;
     }
+
 }

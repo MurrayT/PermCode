@@ -1,5 +1,6 @@
 package complib;
 
+import complib.property.Involves;
 import utilities.Combinations;
 import utilities.Math;
 
@@ -19,7 +20,7 @@ public class Composition implements Comparable<Composition>{
     }
 
     public Composition(Integer[] n) {
-        elements = Arrays.stream(n).mapToInt(i -> i).toArray();
+        elements = Arrays.stream(n).mapToInt(i -> i).filter(x->x>0).toArray();
         value = IntStream.of(elements).sum();
         length = elements.length;
     }
@@ -89,22 +90,8 @@ public class Composition implements Comparable<Composition>{
     }
 
     public static boolean contains(Composition pattern, Composition container) {
-        return contains(pattern.elements, container.elements);
-    }
-
-    public static boolean contains(int[] pattern, int[] container) {
-        int patternLayerToMatch = 0;
-        int containerLayerToLook = 0;
-        while (containerLayerToLook <= container.length - pattern.length + patternLayerToMatch) {
-            if (container[containerLayerToLook] >= pattern[patternLayerToMatch]) {
-                patternLayerToMatch++;
-            }
-            if (patternLayerToMatch == pattern.length) {
-                return true;
-            }
-            containerLayerToLook++;
-        }
-        return false;
+        var inv = new Involves(pattern);
+        return inv.test(container);
     }
 
     public static List<int[]> occurrences(Composition pattern, Composition container) {
@@ -140,11 +127,24 @@ public class Composition implements Comparable<Composition>{
         return Arrays.copyOf(elements, elements.length);
     }
 
-    public static boolean canCover(Composition pattern, Composition text){
-        return occurrences(pattern, text).stream().flatMapToInt(Arrays::stream).boxed().collect(Collectors.toSet()).size() == text.length;
+
+    public Collection<Composition> onePointDeletions(){
+        Set<Composition> result = new HashSet<>();
+        for (int index=0; index < this.length; index++){
+            var parent = this.getBoxedElements();
+            parent[index]--;
+//            System.err.println(new Composition(parent));
+            result.add(new Composition(parent));
+        }
+        return result;
     }
 
-    public static boolean canCover(Composition pattern, Composition text, Boolean b) {
+    public static void main(String[] args) {
+        var c = new Composition(1,3,2,4,6,3,2,3);
+        System.err.println(c.onePointDeletions());
+    }
+
+    public static boolean canCover(Composition pattern, Composition text) {
         Set<Integer> toMatch = IntStream.range(0, text.length).boxed().collect(Collectors.toSet());
         if (pattern.length > text.length)
             return false;
